@@ -98,3 +98,21 @@ document.getElementById('adButton').addEventListener('click', (e) => {
         }, 2000); 
     }
 });
+
+// --- Modal Pop-up Logic for Legal Pages ---
+const privacyModal = document.getElementById('privacyModal');
+const termsModal = document.getElementById('termsModal');
+
+// Open Modals
+document.getElementById('openPrivacy').addEventListener('click', () => privacyModal.classList.remove('hidden'));
+document.getElementById('openTerms').addEventListener('click', () => termsModal.classList.remove('hidden'));
+
+// Close Modals via X button
+document.getElementById('closePrivacy').addEventListener('click', () => privacyModal.classList.add('hidden'));
+document.getElementById('closeTerms').addEventListener('click', () => termsModal.classList.add('hidden'));
+
+// Close Modals by clicking outside the box
+window.addEventListener('click', (e) => {
+    if (e.target === privacyModal) privacyModal.classList.add('hidden');
+    if (e.target === termsModal) termsModal.classList.add('hidden');
+});
