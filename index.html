@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neura-Mitram | Your Neural Friend</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
+</head>
+<body>
+
+    <div class="app-container">
+        <header>
+            <h1 class="logo">Neura-<span>Mitram</span></h1>
+            <p class="tagline">The dynamic mirror of your subconscious</p>
+        </header>
+
+        <div class="orb-container">
+            <div id="mitramOrb" class="mitram-orb state-gold"></div>
+            <p id="orbVibeText" class="orb-vibe-text">Core Status: Synchronized</p>
+        </div>
+
+        <div class="output-container">
+            <p id="freeOutputText" class="free-text">Feed me raw thoughts, an anxious text thread, or a dream to read your aura.</p>
+            
+            <div id="gatedContainer" class="gated-container hidden">
+                <div id="analysisLockOverlay" class="lock-overlay">
+                    <p>Mitram has unlocked a deep breakthrough about your subconscious pattern...</p>
+                    <button id="adButton" class="cta-button primary-btn">🎬 Watch Ad to Unlock Breakthrough</button>
+                </div>
+                <p id="deepAnalysisText" class="deep-text blurred-content"></p>
+            </div>
+        </div>
+
+        <div class="input-container">
+            <textarea id="userInput" placeholder="Type a raw thought or paste a confusing text thread here..."></textarea>
+            <button id="feedButton" class="cta-button submit-btn">Feed Mitram</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
