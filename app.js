@@ -33,6 +33,7 @@ document.getElementById('feedButton').addEventListener('click', async () => {
         document.getElementById('analysisLockOverlay').classList.remove('hidden');
         document.getElementById('deepAnalysisText').classList.add('blurred-content');
         document.getElementById('deepAnalysisText').innerText = data.deep_analysis;
+        document.getElementById('adButton').style.display = 'block';
 
     } catch (err) {
         console.error("API error:", err);
@@ -69,7 +70,7 @@ googletag.cmd.push(() => {
         
         googletag.pubads().addEventListener('rewardedSlotReady', (event) => {
             const adButton = document.getElementById('adButton');
-            adButton.style.display = 'block';
+            // Overwrite the fallback onclick if the actual ad is ready
             adButton.onclick = () => event.makeRewardedVisible();
         });
 
@@ -79,5 +80,21 @@ googletag.cmd.push(() => {
         });
 
         googletag.enableServices();
+    }
+});
+
+// TEMPORARY FALLBACK: Use this until AdSense approves neuramitram.space
+// This ensures the button still works for users today even if an ad doesn't load.
+document.getElementById('adButton').addEventListener('click', (e) => {
+    // Only run the fallback if the actual AdSense onClick hasn't taken over
+    if (e.target.onclick === null) {
+        document.getElementById('adButton').innerText = "Unlocking Neural Pathways...";
+        
+        // Simulates a 2-second processing delay, then unlocks the content
+        setTimeout(() => {
+            document.getElementById('analysisLockOverlay').classList.add('hidden');
+            document.getElementById('deepAnalysisText').classList.remove('blurred-content');
+            document.getElementById('adButton').style.display = 'none'; // hide button after unlock
+        }, 2000); 
     }
 });
