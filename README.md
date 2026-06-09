@@ -1,5 +1,4 @@
-# PWA-engine
-# 🔮 Neura-Mitram PWA
+# 🔮 Neura-Mitram PWA-engine
 
 This repository contains the lightning-fast, Progressive Web App (PWA) frontend for **Neura-Mitram** (Your Neural Friend). 
 
