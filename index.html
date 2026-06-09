@@ -14,15 +14,6 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8182434254987808" crossorigin="anonymous"></script>
     
     <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
-
-    <style>
-        /* Small inline CSS addition for the new footer */
-        .seo-footer {
-            margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center; font-size: 11px; color: var(--text-secondary); line-height: 1.6;
-        }
-        .seo-footer a { color: var(--text-secondary); text-decoration: underline; margin: 0 5px; }
-    </style>
 </head>
 <body>
     <div class="app-container">
@@ -56,12 +47,36 @@
         <div class="seo-footer">
             <p><strong>How it works:</strong> Neura-Mitram utilizes advanced AI to analyze text, dreams, and thoughts, providing users with a psychological reflection of their current mental state. Powered by Gemini.</p>
             <p>
-                <a href="#">Privacy Policy</a> | 
-                <a href="#">Terms of Service</a> | 
+                <button id="openPrivacy" class="legal-link">Privacy Policy</button> | 
+                <button id="openTerms" class="legal-link">Terms of Service</button> | 
                 &copy; 2026 Neura-Mitram
             </p>
         </div>
     </div>
+
+    <div id="privacyModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-btn" id="closePrivacy">&times;</span>
+            <h2>Privacy Policy</h2>
+            <p><strong>Last Updated:</strong> June 2026</p>
+            <p>Welcome to Neura-Mitram. Your privacy is critical to us. Because we deal with personal thoughts, we have built this app to be highly secure.</p>
+            <p><strong>1. Data Collection:</strong> When you input text into Neura-Mitram, it is sent to our AI backend (Google Gemini) for processing. We store anonymous flags to keep your "Orb" synchronized, but we do not require your name, email, or identity.</p>
+            <p><strong>2. Advertising:</strong> We use Google AdSense to fund this free tool. Third-party vendors, including Google, use cookies to serve ads based on your prior visits to this website or other websites.</p>
+            <p><strong>3. Data Security:</strong> All data in transit is encrypted using HTTPS. Anonymous usage data is stored in Google Firebase.</p>
+        </div>
+    </div>
+
+    <div id="termsModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-btn" id="closeTerms">&times;</span>
+            <h2>Terms of Service</h2>
+            <p><strong>Last Updated:</strong> June 2026</p>
+            <p><strong>1. Entertainment Purposes Only:</strong> Neura-Mitram is an AI-powered experimental tool designed for self-reflection and entertainment. <strong>It is NOT a replacement for licensed medical or psychological therapy.</strong> If you are experiencing a mental health crisis, please contact local emergency services immediately.</p>
+            <p><strong>2. AI Limitations:</strong> The insights generated are created by artificial intelligence (Gemini) and may occasionally be inaccurate, harsh, or out of context. You agree not to make major life decisions solely based on the app's output.</p>
+            <p><strong>3. Usage:</strong> You agree not to attempt to reverse-engineer our API or submit illicit, illegal, or harmful content into the engine.</p>
+        </div>
+    </div>
+
     <script src="app.js"></script>
 </body>
 </html>
