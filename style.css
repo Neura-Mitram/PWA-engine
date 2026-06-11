@@ -5,7 +5,6 @@
     --hud-cyan-glow: rgba(0, 243, 255, 0.4);
     --hud-magenta: #ff0055;
     
-    /* Dynamic Orb States */
     --orb-gold: #ffd700;
     --orb-crimson: #ff003c;
     --orb-blue: #0088ff;
@@ -27,7 +26,6 @@ body {
     overflow-x: hidden;
 }
 
-/* CRT Scanline Overlay */
 .crt-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
@@ -45,16 +43,12 @@ body {
     position: relative;
 }
 
-/* Header */
 header { text-align: center; border-bottom: 1px solid var(--hud-cyan-glow); padding-bottom: 15px; }
 .logo { font-size: 26px; text-shadow: 0 0 10px var(--hud-cyan); }
 .logo span { color: var(--hud-magenta); text-shadow: 0 0 10px var(--hud-magenta); }
 .blinking-cursor { animation: blink 1s step-end infinite; }
 .tagline { font-size: 12px; color: #555; margin-top: 5px; }
 
-/* =========================================
-   THE NEW QUANTUM ORB (WITH WAVES)
-========================================= */
 .orb-nexus {
     position: relative; height: 200px; display: flex; justify-content: center; align-items: center; margin: 20px 0;
 }
@@ -66,7 +60,6 @@ header { text-align: center; border-bottom: 1px solid var(--hud-cyan-glow); padd
     transition: all 1s ease;
 }
 
-/* The Continuous Emitting Waves */
 .nexus-wave {
     position: absolute; width: 80px; height: 80px; border-radius: 50%;
     border: 2px solid var(--active-color); opacity: 0;
@@ -76,7 +69,6 @@ header { text-align: center; border-bottom: 1px solid var(--hud-cyan-glow); padd
 .wave-2 { animation-delay: 1s; }
 .wave-3 { animation-delay: 2s; }
 
-/* Dynamic JS State Variables mapped to CSS */
 .orb-nexus:has(.state-gold) { --active-color: var(--orb-gold); }
 .orb-nexus:has(.state-crimson) { --active-color: var(--orb-crimson); }
 .orb-nexus:has(.state-blue) { --active-color: var(--orb-blue); }
@@ -89,7 +81,6 @@ header { text-align: center; border-bottom: 1px solid var(--hud-cyan-glow); padd
 }
 .orb-vibe-text { font-size: 12px; color: var(--hud-cyan); text-shadow: 0 0 5px var(--hud-cyan); }
 
-/* Readout Box */
 .data-readout {
     background: rgba(0, 20, 30, 0.5); border: 1px solid var(--hud-cyan-glow);
     padding: 15px; min-height: 100px; position: relative; overflow: hidden;
@@ -102,7 +93,6 @@ header { text-align: center; border-bottom: 1px solid var(--hud-cyan-glow); padd
 .terminal-text { font-size: 16px; line-height: 1.5; text-transform: uppercase; margin-bottom: 10px; }
 .secondary-readout { font-size: 14px; color: #a0c0d0; }
 
-/* Voice Input Matrix (From previous step) */
 .input-matrix { display: flex; flex-direction: column; align-items: center; gap: 15px; }
 .cyber-mic-wrapper { position: relative; width: 100px; height: 100px; display: flex; justify-content: center; align-items: center; margin-bottom: 10px; }
 .cyber-ring { position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: 50%; pointer-events: none; transition: all 0.4s ease; }
@@ -111,7 +101,6 @@ header { text-align: center; border-bottom: 1px solid var(--hud-cyan-glow); padd
 .cyber-core { z-index: 10; width: 50px; height: 50px; border-radius: 50%; background: rgba(0, 243, 255, 0.1); border: 1px solid var(--hud-cyan); color: var(--hud-cyan); cursor: pointer; display: flex; justify-content: center; align-items: center; transition: all 0.3s ease; box-shadow: 0 0 15px var(--hud-cyan-glow); }
 .cyber-core svg { width: 22px; height: 22px; }
 
-/* Mic Overdrive */
 .cyber-mic-wrapper:has(.listening-active) .cyber-core { background: rgba(255, 0, 85, 0.2); border-color: var(--hud-magenta); color: var(--hud-magenta); box-shadow: 0 0 30px var(--hud-magenta); animation: core-beat 0.5s infinite alternate; }
 .cyber-mic-wrapper:has(.listening-active) .outer-dash { border-color: var(--hud-magenta); animation: spin-right 2s linear infinite; }
 .cyber-mic-wrapper:has(.listening-active) .inner-track { border-top-color: var(--hud-magenta); border-right-color: var(--hud-magenta); animation: spin-left 1.5s linear infinite; }
@@ -122,7 +111,6 @@ header { text-align: center; border-bottom: 1px solid var(--hud-cyan-glow); padd
 .cyber-btn { width: 100%; padding: 15px; background: transparent; border: 1px solid var(--hud-cyan); color: var(--hud-cyan); cursor: pointer; text-transform: uppercase; font-weight: bold; transition: 0.3s; box-shadow: inset 0 0 10px rgba(0,243,255,0.1); }
 .cyber-btn:hover { background: var(--hud-cyan); color: #000; box-shadow: 0 0 20px var(--hud-cyan); }
 
-/* Footer & Modals */
 .cyber-footer { text-align: center; font-size: 10px; color: #555; margin-top: 10px; border-top: 1px dashed #333; padding-top: 10px; }
 .legal-link { color: var(--hud-cyan-glow); cursor: pointer; text-decoration: none; }
 .legal-link:hover { color: var(--hud-cyan); text-shadow: 0 0 5px var(--hud-cyan); }
@@ -133,7 +121,6 @@ header { text-align: center; border-bottom: 1px solid var(--hud-cyan-glow); padd
 .cyber-modal h2 { margin-bottom: 20px; border-bottom: 1px solid var(--hud-cyan-glow); padding-bottom: 10px; }
 .close-btn { position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; color: var(--hud-magenta); }
 
-/* Animations */
 @keyframes blink { 50% { opacity: 0; } }
 @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
 @keyframes emit-wave { 0% { transform: scale(1); opacity: 1; border-width: 2px; } 100% { transform: scale(3.5); opacity: 0; border-width: 0px; } }
