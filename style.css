@@ -121,6 +121,28 @@ header { text-align: center; border-bottom: 1px solid var(--hud-cyan-glow); padd
 .cyber-modal h2 { margin-bottom: 20px; border-bottom: 1px solid var(--hud-cyan-glow); padding-bottom: 10px; }
 .close-btn { position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; color: var(--hud-magenta); }
 
+/* =========================================
+   MIND-PRINT EXPORT STYLES
+========================================= */
+.capture-zone {
+    background-color: var(--bg-void); 
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.secondary-btn {
+    background: rgba(0, 243, 255, 0.05);
+    border: 1px dashed var(--hud-cyan);
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.secondary-btn:hover {
+    background: rgba(0, 243, 255, 0.2);
+    box-shadow: 0 0 15px var(--hud-cyan);
+}
+
 @keyframes blink { 50% { opacity: 0; } }
 @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
 @keyframes emit-wave { 0% { transform: scale(1); opacity: 1; border-width: 2px; } 100% { transform: scale(3.5); opacity: 0; border-width: 0px; } }
