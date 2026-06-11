@@ -25,7 +25,6 @@ async function bootSequence() {
             const data = await response.json();
             document.getElementById('directiveText').innerText = `> DIRECTIVE: ${data.directive}`;
             
-            // If they haven't logged in for 48 hours, trigger the glitch protocol
             if (data.decay_state === true) {
                 document.getElementById('mainTerminal').classList.add('glitch-mode');
                 document.getElementById('orbVibeText').innerText = "WARNING: COGNITIVE OVERLOAD";
@@ -39,7 +38,6 @@ async function bootSequence() {
         document.getElementById('orbVibeText').innerText = "STATUS: SYNCHRONIZED";
     }
 }
-// Trigger boot on load
 window.addEventListener('DOMContentLoaded', bootSequence);
 
 // =========================================================================
@@ -142,7 +140,7 @@ if (SpeechRecognition) {
     recognition.onend = () => {
         isListening = false;
         micBtn.classList.remove('listening-active');
-        userInput.placeholder = "> INPUT RAW DATA OR INITIATE VOICE LINK...";
+        userInput.placeholder = "> Type what is on your mind, or tap the mic to speak...";
     };
 
     recognition.onerror = (err) => {
@@ -163,9 +161,10 @@ document.getElementById('feedButton').addEventListener('click', async () => {
     initAmbientAudio();
     if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
 
-    document.getElementById('feedButton').innerText = "PROCESSING_MATRIX...";
+    // HUMANIZED LOADING TEXT
+    document.getElementById('feedButton').innerText = "READING YOUR MIND...";
     document.getElementById('feedButton').disabled = true;
-    document.getElementById('directiveText').classList.add('hidden'); // Clear directive
+    document.getElementById('directiveText').classList.add('hidden');
     document.getElementById('deepAnalysisText').classList.add('hidden');
 
     try {
@@ -178,7 +177,6 @@ document.getElementById('feedButton').addEventListener('click', async () => {
         if (!response.ok) throw new Error(`HTTP_${response.status}`);
         const data = await response.json();
 
-        // Cure the Glitch if it was active
         document.getElementById('mainTerminal').classList.remove('glitch-mode');
 
         const orbEl = document.getElementById('mitramOrb');
@@ -201,7 +199,8 @@ document.getElementById('feedButton').addEventListener('click', async () => {
         document.getElementById('freeOutputText').innerText = `> SYSTEM_ERROR: ${err.message}`;
         document.getElementById('freeOutputText').classList.remove('hidden');
     } finally {
-        document.getElementById('feedButton').innerText = "EXECUTE_SYNC";
+        // HUMANIZED IDLE TEXT
+        document.getElementById('feedButton').innerText = "ANALYZE MY THOUGHTS";
         document.getElementById('feedButton').disabled = false;
         userInput.value = "";
     }
