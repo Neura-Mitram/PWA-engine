@@ -17,6 +17,7 @@ function initAmbientAudio() {
         ambientOscillator = audioCtx.createOscillator();
         ambientGainNode = audioCtx.createGain();
 
+        // Create a smooth, deep sine wave
         ambientOscillator.type = 'sine'; 
         ambientOscillator.frequency.setValueAtTime(220, audioCtx.currentTime); 
         ambientGainNode.gain.setValueAtTime(0.001, audioCtx.currentTime);
@@ -38,6 +39,7 @@ function shiftAmbientAtmosphere(color) {
     const now = audioCtx.currentTime;
     ambientGainNode.gain.linearRampToValueAtTime(0.04, now + 1.0); 
 
+    // Smoothly shift the background frequency based on the AI orb color
     switch(color.toLowerCase()) {
         case 'crimson': ambientOscillator.frequency.exponentialRampToValueAtTime(110, now + 2.5); break;
         case 'blue': ambientOscillator.frequency.exponentialRampToValueAtTime(432, now + 2.5); break;
@@ -48,7 +50,7 @@ function shiftAmbientAtmosphere(color) {
 }
 
 // =========================================================================
-// PHASE 1: DICTATION (WEB SPEECH API)
+// PHASE 1: DICTATION (WEB SPEECH API) - LIVE TOGGLE
 // =========================================================================
 const micBtn = document.getElementById('micBtn');
 const userInput = document.getElementById('userInput');
@@ -56,34 +58,74 @@ const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecogni
 
 if (SpeechRecognition) {
     const recognition = new SpeechRecognition();
-    recognition.continuous = false;
-    recognition.interimResults = false;
+    recognition.continuous = true; // Keep listening even if user pauses
+    recognition.interimResults = true; // Show words on screen in real-time
     recognition.lang = 'en-US';
+
+    let isListening = false;
+    let baseText = ""; 
 
     micBtn.addEventListener('click', () => {
         initAmbientAudio(); 
         if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-        recognition.start();
-        micBtn.classList.add('listening-active');
-        userInput.placeholder = "Listening to your subconscious thoughts...";
+
+        if (isListening) {
+            recognition.stop();
+        } else {
+            baseText = userInput.value;
+            if (baseText && !baseText.endsWith(' ')) baseText += ' '; 
+            
+            try {
+                recognition.start();
+            } catch (e) {
+                console.error("Mic already running.");
+            }
+        }
     });
 
+    recognition.onstart = () => {
+        isListening = true;
+        micBtn.classList.add('listening-active');
+        userInput.placeholder = "Listening... speak your mind.";
+    };
+
     recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        userInput.value = userInput.value ? userInput.value + " " + transcript : transcript;
+        let interimTranscript = '';
+        let finalTranscript = '';
+
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+            if (event.results[i].isFinal) {
+                finalTranscript += event.results[i][0].transcript;
+            } else {
+                interimTranscript += event.results[i][0].transcript;
+            }
+        }
+
+        if (finalTranscript) {
+            baseText += finalTranscript + " ";
+            userInput.value = baseText;
+        } else {
+            userInput.value = baseText + interimTranscript;
+        }
     };
 
     recognition.onend = () => {
+        isListening = false;
         micBtn.classList.remove('listening-active');
         userInput.placeholder = "Type a raw thought or paste a confusing text thread here...";
     };
 
     recognition.onerror = (err) => {
-        console.error("Speech Recognition Exception: ", err);
+        console.error("Speech Recognition Error: ", err.error);
+        isListening = false;
         micBtn.classList.remove('listening-active');
+        
+        if (err.error === 'not-allowed') {
+            alert("Microphone access blocked. Please tap the lock icon in your browser address bar to allow it.");
+        }
     };
 } else {
-    micBtn.style.display = 'none';
+    micBtn.style.display = 'none'; // Hide mic on unsupported legacy browsers
 }
 
 // =========================================================================
@@ -93,7 +135,7 @@ document.getElementById('feedButton').addEventListener('click', async () => {
     const textInput = userInput.value.trim();
     if (!textInput) return;
 
-    // Wake audio on click if user didn't use mic
+    // Wake audio on click if user didn't use the mic first
     initAmbientAudio();
     if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
 
@@ -126,7 +168,7 @@ document.getElementById('feedButton').addEventListener('click', async () => {
 
         // Visual & Audio Layout Mutations
         updateOrbVisualEngine(data.orb_color, data.distress_flag);
-        shiftAmbientAtmosphere(data.orb_color);
+        shiftAmbientAtmosphere(data.orb_color); // Adjust the background music
         
         document.getElementById('freeOutputText').innerText = data.snappy_reaction;
 
@@ -159,7 +201,7 @@ function updateOrbVisualEngine(color, flag) {
 }
 
 // =========================================================================
-// MONETIZATION & UNLOCK LOGIC
+// MONETIZATION & UNLOCK LOGIC (Google AdSense)
 // =========================================================================
 window.googletag = window.googletag || { cmd: [] };
 googletag.cmd.push(() => {
@@ -185,6 +227,7 @@ googletag.cmd.push(() => {
     }
 });
 
+// Fallback unlock button (runs instantly if Ads haven't loaded)
 document.getElementById('adButton').addEventListener('click', (e) => {
     if (e.target.onclick === null) {
         document.getElementById('adButton').innerText = "Unlocking Neural Pathways...";
@@ -197,7 +240,7 @@ document.getElementById('adButton').addEventListener('click', (e) => {
 });
 
 // =========================================================================
-// LEGAL MODALS
+// LEGAL MODALS LOGIC
 // =========================================================================
 const privacyModal = document.getElementById('privacyModal');
 const termsModal = document.getElementById('termsModal');
