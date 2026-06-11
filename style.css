@@ -49,21 +49,105 @@ header { text-align: center; }
 .blurred-content { filter: blur(8px); user-select: none; pointer-events: none; }
 .hidden { display: none !important; }
 
-/* Input Styling with Microphone Integration */
-.input-container { display: flex; flex-direction: column; gap: 12px; }
-.input-wrapper { position: relative; width: 100%; }
-textarea { width: 100%; height: 90px; background: #0d0f12; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 14px; padding-right: 45px; color: white; resize: none; font-size: 14px; outline: none; transition: border 0.2s; }
-textarea:focus { border-color: #f59e0b; }
+/* =========================================
+   FUTURISTIC VOICE CORE & RIPPLES
+========================================= */
+.input-container { display: flex; flex-direction: column; gap: 20px; align-items: center; }
 
-.mic-btn {
-    position: absolute; bottom: 12px; right: 12px; background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 50%; cursor: pointer;
-    padding: 8px; font-size: 16px; transition: all 0.3s ease; display: flex; justify-content: center; align-items: center;
+.voice-center {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0;
 }
-.mic-btn:hover { background: rgba(255, 255, 255, 0.15); }
-.mic-btn.listening-active {
-    background: rgba(255, 74, 74, 0.2); border-color: #ff4a4a;
-    box-shadow: 0 0 15px rgba(255, 74, 74, 0.6); animation: pulseMic 1.5s infinite;
+
+/* The Glassmorphic Mic Button */
+.futuristic-mic {
+    position: relative;
+    z-index: 10;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.05);
+}
+
+.futuristic-mic svg {
+    width: 24px;
+    height: 24px;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.futuristic-mic:hover {
+    transform: scale(1.1);
+    color: var(--text-primary);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Active Listening State (Red Alert) */
+.listening-active.futuristic-mic {
+    background: rgba(255, 74, 74, 0.15);
+    border-color: #ff4a4a;
+    color: #ff4a4a;
+    box-shadow: 0 0 25px rgba(255, 74, 74, 0.6), inset 0 0 15px rgba(255, 74, 74, 0.2);
+    transform: scale(1.05);
+}
+
+/* The Expanding Concentric Waves */
+.wave-ring {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid #ff4a4a;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.listening-active ~ .wave-ring,
+.voice-center:has(.listening-active) .wave-ring {
+    animation: radar-pulse 2s infinite cubic-bezier(0.21, 0.53, 0.56, 1);
+}
+
+.voice-center .ring-1 { animation-delay: 0s; }
+.voice-center .ring-2 { animation-delay: 0.6s; }
+.voice-center .ring-3 { animation-delay: 1.2s; }
+
+@keyframes radar-pulse {
+    0% { transform: scale(1); opacity: 0.8; border-width: 2px; }
+    100% { transform: scale(3.5); opacity: 0; border-width: 0px; }
+}
+
+/* Sleeker text box to match the new mic */
+.glass-input {
+    width: 100%;
+    height: 80px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 14px;
+    color: white;
+    resize: none;
+    font-size: 14px;
+    text-align: center;
+    outline: none;
+    transition: all 0.3s;
+}
+
+.glass-input:focus {
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.6);
 }
 
 .cta-button { width: 100%; padding: 14px; border-radius: 14px; border: none; font-weight: 600; font-size: 15px; cursor: pointer; transition: transform 0.1s; }
@@ -73,7 +157,6 @@ textarea:focus { border-color: #f59e0b; }
 
 @keyframes breathe { 0% { transform: scale(1); } 100% { transform: scale(1.06); } }
 @keyframes morph { 0% { border-radius: 50% 50% 50% 50%; } 50% { border-radius: 45% 55% 48% 52%; } 100% { border-radius: 53% 47% 55% 45%; } }
-@keyframes pulseMic { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
 
 /* SEO Footer & Legal Links */
 .seo-footer {
