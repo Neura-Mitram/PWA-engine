@@ -2,9 +2,100 @@ const BACKEND_API_URL = "https://neuramitram-orb-engine-866055046613.us-central1
 
 let cachedAnalysisPayload = null;
 
+// =========================================================================
+// PHASE 1: AUDIO SYNTHESIS ENGINE
+// =========================================================================
+let audioCtx = null;
+let ambientOscillator = null;
+let ambientGainNode = null;
+
+function initAmbientAudio() {
+    if (audioCtx) return; 
+    try {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContextClass();
+        ambientOscillator = audioCtx.createOscillator();
+        ambientGainNode = audioCtx.createGain();
+
+        ambientOscillator.type = 'sine'; 
+        ambientOscillator.frequency.setValueAtTime(220, audioCtx.currentTime); 
+        ambientGainNode.gain.setValueAtTime(0.001, audioCtx.currentTime);
+
+        ambientOscillator.connect(ambientGainNode);
+        ambientGainNode.connect(audioCtx.destination);
+        
+        ambientOscillator.start();
+        console.log("✓ Native Ambient Synth Engine active.");
+    } catch (e) {
+        console.error("Web Audio API not supported on this browser:", e);
+    }
+}
+
+function shiftAmbientAtmosphere(color) {
+    if (!audioCtx) initAmbientAudio();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+
+    const now = audioCtx.currentTime;
+    ambientGainNode.gain.linearRampToValueAtTime(0.04, now + 1.0); 
+
+    switch(color.toLowerCase()) {
+        case 'crimson': ambientOscillator.frequency.exponentialRampToValueAtTime(110, now + 2.5); break;
+        case 'blue': ambientOscillator.frequency.exponentialRampToValueAtTime(432, now + 2.5); break;
+        case 'grey': ambientOscillator.frequency.exponentialRampToValueAtTime(165, now + 2.5); break;
+        case 'gold': ambientOscillator.frequency.exponentialRampToValueAtTime(528, now + 2.5); break;
+        default: ambientOscillator.frequency.exponentialRampToValueAtTime(220, now + 2.5);
+    }
+}
+
+// =========================================================================
+// PHASE 1: DICTATION (WEB SPEECH API)
+// =========================================================================
+const micBtn = document.getElementById('micBtn');
+const userInput = document.getElementById('userInput');
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+if (SpeechRecognition) {
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
+
+    micBtn.addEventListener('click', () => {
+        initAmbientAudio(); 
+        if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+        recognition.start();
+        micBtn.classList.add('listening-active');
+        userInput.placeholder = "Listening to your subconscious thoughts...";
+    });
+
+    recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        userInput.value = userInput.value ? userInput.value + " " + transcript : transcript;
+    };
+
+    recognition.onend = () => {
+        micBtn.classList.remove('listening-active');
+        userInput.placeholder = "Type a raw thought or paste a confusing text thread here...";
+    };
+
+    recognition.onerror = (err) => {
+        console.error("Speech Recognition Exception: ", err);
+        micBtn.classList.remove('listening-active');
+    };
+} else {
+    micBtn.style.display = 'none';
+}
+
+// =========================================================================
+// CORE APPLICATION LOGIC
+// =========================================================================
 document.getElementById('feedButton').addEventListener('click', async () => {
-    const textInput = document.getElementById('userInput').value.trim();
+    const textInput = userInput.value.trim();
     if (!textInput) return;
+
+    // Wake audio on click if user didn't use mic
+    initAmbientAudio();
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
 
     document.getElementById('feedButton').innerText = "Digesting thought...";
     document.getElementById('feedButton').disabled = true;
@@ -20,7 +111,6 @@ document.getElementById('feedButton').addEventListener('click', async () => {
             })
         });
 
-        // Deep response logging check
         if (!response.ok) {
             const errorPayload = await response.json().catch(() => ({}));
             throw new Error(errorPayload.detail || `Server returned HTTP Status Code ${response.status}`);
@@ -29,14 +119,15 @@ document.getElementById('feedButton').addEventListener('click', async () => {
         const data = await response.json();
         cachedAnalysisPayload = data;
 
-        // Print the active database synchronization logs straight to the developer window
         console.log("--- NEURA-MITRAM ENGINE RUNTIME RESPONSE ---");
         console.log("AI State Mapping Evaluation:", data);
         console.log("Database Telemetry Status:", data.db_status);
         console.log("--------------------------------------------");
 
-        // Visual Layout Mutations
+        // Visual & Audio Layout Mutations
         updateOrbVisualEngine(data.orb_color, data.distress_flag);
+        shiftAmbientAtmosphere(data.orb_color);
+        
         document.getElementById('freeOutputText').innerText = data.snappy_reaction;
 
         // Manage Gated Blocks
@@ -52,7 +143,7 @@ document.getElementById('feedButton').addEventListener('click', async () => {
     } finally {
         document.getElementById('feedButton').innerText = "Feed Mitram";
         document.getElementById('feedButton').disabled = false;
-        document.getElementById('userInput').value = "";
+        userInput.value = "";
     }
 });
 
@@ -67,6 +158,9 @@ function updateOrbVisualEngine(color, flag) {
     else labelEl.innerText = `Core Status: ${flag.replace('_', ' ').toUpperCase()}`;
 }
 
+// =========================================================================
+// MONETIZATION & UNLOCK LOGIC
+// =========================================================================
 window.googletag = window.googletag || { cmd: [] };
 googletag.cmd.push(() => {
     const adSlot = googletag.defineOutOfPageSlot(
@@ -102,6 +196,9 @@ document.getElementById('adButton').addEventListener('click', (e) => {
     }
 });
 
+// =========================================================================
+// LEGAL MODALS
+// =========================================================================
 const privacyModal = document.getElementById('privacyModal');
 const termsModal = document.getElementById('termsModal');
 
