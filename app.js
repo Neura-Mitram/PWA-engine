@@ -5,7 +5,6 @@ const BACKEND_API_URL = "https://neuramitram-orb-engine-866055046613.us-central1
 // =========================================================================
 let neuralSignature = localStorage.getItem("neura_signature");
 if (!neuralSignature) {
-    // Generate a unique anonymous ID (e.g., SUBJECT_4F9A2B)
     neuralSignature = "SUBJECT_" + Math.random().toString(36).substring(2, 8).toUpperCase();
     localStorage.setItem("neura_signature", neuralSignature);
 }
@@ -134,20 +133,19 @@ document.getElementById('feedButton').addEventListener('click', async () => {
 
     document.getElementById('feedButton').innerText = "PROCESSING_MATRIX...";
     document.getElementById('feedButton').disabled = true;
-    document.getElementById('deepAnalysisText').classList.add('hidden'); // hide previous analysis
+    document.getElementById('deepAnalysisText').classList.add('hidden');
+    document.getElementById('exportBtn').classList.add('hidden'); // Hide export button initially
 
     try {
         const response = await fetch(BACKEND_API_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            // Injecting the unique neural signature right here
             body: JSON.stringify({ user_id: neuralSignature, user_input: textInput })
         });
 
         if (!response.ok) throw new Error(`HTTP_${response.status}`);
         const data = await response.json();
 
-        // Update Orb UI via mapping
         const orbEl = document.getElementById('mitramOrb');
         const labelEl = document.getElementById('orbVibeText');
         
@@ -159,10 +157,12 @@ document.getElementById('feedButton').addEventListener('click', async () => {
 
         shiftAmbientAtmosphere(data.orb_color);
         
-        // Print directly to terminal (No Ads, No Blur)
         document.getElementById('freeOutputText').innerText = `> ${data.snappy_reaction}`;
         document.getElementById('deepAnalysisText').innerText = `>> DIAGNOSTIC: ${data.deep_analysis}`;
+        
+        // Unhide Analysis and Export Button
         document.getElementById('deepAnalysisText').classList.remove('hidden');
+        document.getElementById('exportBtn').classList.remove('hidden');
 
     } catch (err) {
         document.getElementById('freeOutputText').innerText = `> SYSTEM_ERROR: ${err.message}`;
@@ -180,3 +180,36 @@ document.getElementById('openPrivacy').addEventListener('click', () => pm.classL
 document.getElementById('openTerms').addEventListener('click', () => tm.classList.remove('hidden'));
 document.getElementById('closePrivacy').addEventListener('click', () => pm.classList.add('hidden'));
 document.getElementById('closeTerms').addEventListener('click', () => tm.classList.add('hidden'));
+
+// =========================================================================
+// VIRAL ENGINE (MIND-PRINT PNG EXPORT)
+// =========================================================================
+document.getElementById('exportBtn').addEventListener('click', () => {
+    const printZone = document.getElementById('mindPrintZone');
+    const exportBtn = document.getElementById('exportBtn');
+    
+    const originalText = exportBtn.innerText;
+    exportBtn.innerText = "ENCODING_IMAGE_DATA...";
+    exportBtn.disabled = true;
+
+    const cursor = document.querySelector('.blinking-cursor');
+    if (cursor) cursor.style.display = 'none';
+
+    html2canvas(printZone, {
+        backgroundColor: "#030508", 
+        scale: 2, 
+        useCORS: true 
+    }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `NEURA_MITRAM_STATUS_${Math.floor(Date.now() / 1000)}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+
+        exportBtn.innerText = originalText;
+        exportBtn.disabled = false;
+        if (cursor) cursor.style.display = 'inline';
+    }).catch(err => {
+        console.error("Image Matrix Error:", err);
+        exportBtn.innerText = "ENCODING_FAILED";
+    });
+});
