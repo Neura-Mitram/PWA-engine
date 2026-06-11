@@ -1,14 +1,46 @@
-const BACKEND_API_URL = "https://neuramitram-orb-engine-866055046613.us-central1.run.app/feed-mitram";
+const BACKEND_FEED_URL = "https://neuramitram-orb-engine-866055046613.us-central1.run.app/feed-mitram";
+const BACKEND_WAKE_URL = "https://neuramitram-orb-engine-866055046613.us-central1.run.app/wake-mitram";
 
 // =========================================================================
-// NEURAL SIGNATURE (PERSISTENT MEMORY CORE)
+// NEURAL SIGNATURE
 // =========================================================================
 let neuralSignature = localStorage.getItem("neura_signature");
 if (!neuralSignature) {
     neuralSignature = "SUBJECT_" + Math.random().toString(36).substring(2, 8).toUpperCase();
     localStorage.setItem("neura_signature", neuralSignature);
 }
-console.log(`> IDENTIFIED: ${neuralSignature}`);
+
+// =========================================================================
+// THE AWAKENING (BOOT SEQUENCE)
+// =========================================================================
+async function bootSequence() {
+    try {
+        const response = await fetch(BACKEND_WAKE_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_id: neuralSignature })
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            document.getElementById('directiveText').innerText = `> DIRECTIVE: ${data.directive}`;
+            
+            // If they haven't logged in for 48 hours, trigger the glitch protocol
+            if (data.decay_state === true) {
+                document.getElementById('mainTerminal').classList.add('glitch-mode');
+                document.getElementById('orbVibeText').innerText = "WARNING: COGNITIVE OVERLOAD";
+                document.getElementById('mitramOrb').className = "quantum-core state-grey";
+            } else {
+                document.getElementById('orbVibeText').innerText = "STATUS: SYNCHRONIZED";
+            }
+        }
+    } catch (err) {
+        document.getElementById('directiveText').innerText = "> LOCAL SYSTEM BOOTED. AWAITING DATA.";
+        document.getElementById('orbVibeText').innerText = "STATUS: SYNCHRONIZED";
+    }
+}
+// Trigger boot on load
+window.addEventListener('DOMContentLoaded', bootSequence);
 
 // =========================================================================
 // SENSORY ENGINE (AUDIO)
@@ -122,7 +154,7 @@ if (SpeechRecognition) {
 }
 
 // =========================================================================
-// SYSTEM EXECUTION LOGIC (NO ADS)
+// SYSTEM EXECUTION LOGIC
 // =========================================================================
 document.getElementById('feedButton').addEventListener('click', async () => {
     const textInput = userInput.value.trim();
@@ -133,11 +165,11 @@ document.getElementById('feedButton').addEventListener('click', async () => {
 
     document.getElementById('feedButton').innerText = "PROCESSING_MATRIX...";
     document.getElementById('feedButton').disabled = true;
+    document.getElementById('directiveText').classList.add('hidden'); // Clear directive
     document.getElementById('deepAnalysisText').classList.add('hidden');
-    document.getElementById('exportBtn').classList.add('hidden'); // Hide export button initially
 
     try {
-        const response = await fetch(BACKEND_API_URL, {
+        const response = await fetch(BACKEND_FEED_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ user_id: neuralSignature, user_input: textInput })
@@ -145,6 +177,9 @@ document.getElementById('feedButton').addEventListener('click', async () => {
 
         if (!response.ok) throw new Error(`HTTP_${response.status}`);
         const data = await response.json();
+
+        // Cure the Glitch if it was active
+        document.getElementById('mainTerminal').classList.remove('glitch-mode');
 
         const orbEl = document.getElementById('mitramOrb');
         const labelEl = document.getElementById('orbVibeText');
@@ -158,14 +193,13 @@ document.getElementById('feedButton').addEventListener('click', async () => {
         shiftAmbientAtmosphere(data.orb_color);
         
         document.getElementById('freeOutputText').innerText = `> ${data.snappy_reaction}`;
+        document.getElementById('freeOutputText').classList.remove('hidden');
         document.getElementById('deepAnalysisText').innerText = `>> DIAGNOSTIC: ${data.deep_analysis}`;
-        
-        // Unhide Analysis and Export Button
         document.getElementById('deepAnalysisText').classList.remove('hidden');
-        document.getElementById('exportBtn').classList.remove('hidden');
 
     } catch (err) {
         document.getElementById('freeOutputText').innerText = `> SYSTEM_ERROR: ${err.message}`;
+        document.getElementById('freeOutputText').classList.remove('hidden');
     } finally {
         document.getElementById('feedButton').innerText = "EXECUTE_SYNC";
         document.getElementById('feedButton').disabled = false;
@@ -180,36 +214,3 @@ document.getElementById('openPrivacy').addEventListener('click', () => pm.classL
 document.getElementById('openTerms').addEventListener('click', () => tm.classList.remove('hidden'));
 document.getElementById('closePrivacy').addEventListener('click', () => pm.classList.add('hidden'));
 document.getElementById('closeTerms').addEventListener('click', () => tm.classList.add('hidden'));
-
-// =========================================================================
-// VIRAL ENGINE (MIND-PRINT PNG EXPORT)
-// =========================================================================
-document.getElementById('exportBtn').addEventListener('click', () => {
-    const printZone = document.getElementById('mindPrintZone');
-    const exportBtn = document.getElementById('exportBtn');
-    
-    const originalText = exportBtn.innerText;
-    exportBtn.innerText = "ENCODING_IMAGE_DATA...";
-    exportBtn.disabled = true;
-
-    const cursor = document.querySelector('.blinking-cursor');
-    if (cursor) cursor.style.display = 'none';
-
-    html2canvas(printZone, {
-        backgroundColor: "#030508", 
-        scale: 2, 
-        useCORS: true 
-    }).then(canvas => {
-        const link = document.createElement('a');
-        link.download = `NEURA_MITRAM_STATUS_${Math.floor(Date.now() / 1000)}.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-
-        exportBtn.innerText = originalText;
-        exportBtn.disabled = false;
-        if (cursor) cursor.style.display = 'inline';
-    }).catch(err => {
-        console.error("Image Matrix Error:", err);
-        exportBtn.innerText = "ENCODING_FAILED";
-    });
-});
