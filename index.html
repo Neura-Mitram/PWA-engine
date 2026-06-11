@@ -4,33 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NEURA-MITRAM | TERMINAL</title>
-    <link rel="stylesheet" href="style.css?v=2.0">
+    <link rel="stylesheet" href="style.css?v=3.0">
     <link rel="manifest" href="manifest.json">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;800&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
-    <div class="crt-overlay"></div> <div class="terminal-container">
-        <header class="cyber-header">
-            <h1 class="logo">NEURA_<span>MITRAM</span><span class="blinking-cursor">_</span></h1>
-            <p class="tagline">SYS.SUBCONSCIOUS.LINK // ACTIVE</p>
-        </header>
+    <div class="crt-overlay"></div> 
+    
+    <div class="terminal-container">
+        <div id="mindPrintZone" class="capture-zone">
+            <header class="cyber-header">
+                <h1 class="logo">NEURA_<span>MITRAM</span><span class="blinking-cursor">_</span></h1>
+                <p class="tagline">SYS.SUBCONSCIOUS.LINK // ACTIVE</p>
+            </header>
 
-        <div class="orb-nexus">
-            <div class="nexus-wave wave-1"></div>
-            <div class="nexus-wave wave-2"></div>
-            <div class="nexus-wave wave-3"></div>
-            <div id="mitramOrb" class="quantum-core state-gold"></div>
-            <div class="targeting-brackets">
-                <p id="orbVibeText" class="orb-vibe-text">STATUS: SYNCHRONIZED</p>
+            <div class="orb-nexus">
+                <div class="nexus-wave wave-1"></div>
+                <div class="nexus-wave wave-2"></div>
+                <div class="nexus-wave wave-3"></div>
+                <div id="mitramOrb" class="quantum-core state-gold"></div>
+                <div class="targeting-brackets">
+                    <p id="orbVibeText" class="orb-vibe-text">STATUS: SYNCHRONIZED</p>
+                </div>
             </div>
-        </div>
 
-        <div class="data-readout">
-            <div class="scan-line"></div>
-            <p id="freeOutputText" class="terminal-text primary-readout">> AWAITING RAW COGNITIVE INPUT...</p>
-            <p id="deepAnalysisText" class="terminal-text secondary-readout hidden"></p>
+            <div class="data-readout">
+                <div class="scan-line"></div>
+                <p id="freeOutputText" class="terminal-text primary-readout">> AWAITING RAW COGNITIVE INPUT...</p>
+                <p id="deepAnalysisText" class="terminal-text secondary-readout hidden"></p>
+                
+                <button id="exportBtn" class="cyber-btn secondary-btn hidden">[ EXPORT MIND-PRINT ]</button>
+            </div>
         </div>
 
         <div class="input-matrix">
@@ -74,6 +81,6 @@
         </div>
     </div>
 
-    <script src="app.js?v=2.0"></script>
+    <script src="app.js?v=3.0"></script>
 </body>
 </html>
