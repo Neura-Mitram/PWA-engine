@@ -3,48 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neura-Mitram | Your Neural Friend</title>
+    <title>NEURA-MITRAM | TERMINAL</title>
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    
-    <meta name="google-adsense-account" content="ca-pub-8182434254987808">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8182434254987808" crossorigin="anonymous"></script>
-    <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;800&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="app-container">
-        <header>
-            <h1 class="logo">Neura-<span>Mitram</span></h1>
-            <p class="tagline">The dynamic mirror of your subconscious</p>
+    <div class="crt-overlay"></div> <div class="terminal-container">
+        <header class="cyber-header">
+            <h1 class="logo">NEURA_<span>MITRAM</span><span class="blinking-cursor">_</span></h1>
+            <p class="tagline">SYS.SUBCONSCIOUS.LINK // ACTIVE</p>
         </header>
 
-        <div class="orb-container">
-            <div id="mitramOrb" class="mitram-orb state-gold"></div>
-            <p id="orbVibeText" class="orb-vibe-text">Core Status: Synchronized</p>
-        </div>
-
-        <div class="output-container">
-            <p id="freeOutputText" class="free-text">Feed me raw thoughts, an anxious text thread, or a dream to read your aura.</p>
-            
-            <div id="gatedContainer" class="gated-container hidden">
-                <div id="analysisLockOverlay" class="lock-overlay">
-                    <p>Mitram has unlocked a deep breakthrough about your subconscious pattern...</p>
-                    <button id="adButton" class="cta-button primary-btn" style="display: none;">🎬 Watch Ad to Unlock Breakthrough</button>
-                </div>
-                <p id="deepAnalysisText" class="deep-text blurred-content"></p>
+        <div class="orb-nexus">
+            <div class="nexus-wave wave-1"></div>
+            <div class="nexus-wave wave-2"></div>
+            <div class="nexus-wave wave-3"></div>
+            <div id="mitramOrb" class="quantum-core state-gold"></div>
+            <div class="targeting-brackets">
+                <p id="orbVibeText" class="orb-vibe-text">STATUS: SYNCHRONIZED</p>
             </div>
         </div>
 
-        <div class="input-container">
-            <div class="voice-center">
-                <div class="wave-ring ring-1"></div>
-                <div class="wave-ring ring-2"></div>
-                <div class="wave-ring ring-3"></div>
+        <div class="data-readout">
+            <div class="scan-line"></div>
+            <p id="freeOutputText" class="terminal-text primary-readout">> AWAITING RAW COGNITIVE INPUT...</p>
+            <p id="deepAnalysisText" class="terminal-text secondary-readout hidden"></p>
+        </div>
+
+        <div class="input-matrix">
+            <div class="cyber-mic-wrapper" id="micWrapper">
+                <div class="cyber-ring outer-dash"></div>
+                <div class="cyber-ring inner-track"></div>
                 
-                <button id="micBtn" type="button" title="Speak to the Orb" class="futuristic-mic">
+                <button id="micBtn" type="button" title="Initiate Neural Link" class="cyber-core">
                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 2C10.3431 2 9 3.34315 9 5V11C9 12.6569 10.3431 14 12 14C13.6569 14 15 12.6569 15 11V5C15 3.34315 13.6569 2 12 2Z" fill="currentColor"/>
                         <path d="M19 10V11C19 14.866 15.866 18 12 18C8.13401 18 5 14.866 5 11V10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -53,40 +47,30 @@
                 </button>
             </div>
 
-            <textarea id="userInput" class="glass-input" placeholder="Initiate voice protocol or type a thought..."></textarea>
-            <button id="feedButton" class="cta-button submit-btn">Synchronize</button>
+            <textarea id="userInput" class="cyber-input" placeholder="> INPUT RAW DATA OR INITIATE VOICE LINK..."></textarea>
+            <button id="feedButton" class="cyber-btn">EXECUTE_SYNC</button>
         </div>
 
-        <div class="seo-footer">
-            <p><strong>How it works:</strong> Neura-Mitram utilizes advanced AI to analyze text, dreams, and thoughts, providing users with a psychological reflection of their current mental state. Powered by Gemini.</p>
-            <p>
-                <button id="openPrivacy" class="legal-link">Privacy Policy</button> | 
-                <button id="openTerms" class="legal-link">Terms of Service</button> | 
-                &copy; 2026 Neura-Mitram
-            </p>
+        <div class="cyber-footer">
+            <p>SECURE CONNECTION // <span id="openPrivacy" class="legal-link">PRIVACY_PROTOCOL</span> // <span id="openTerms" class="legal-link">TOS_OVERRIDE</span></p>
         </div>
     </div>
 
     <div id="privacyModal" class="modal hidden">
-        <div class="modal-content">
+        <div class="modal-content cyber-modal">
             <span class="close-btn" id="closePrivacy">&times;</span>
-            <h2>Privacy Policy</h2>
-            <p><strong>Last Updated:</strong> June 2026</p>
-            <p>Welcome to Neura-Mitram. Your privacy is critical to us. Because we deal with personal thoughts, we have built this app to be highly secure.</p>
-            <p><strong>1. Data Collection:</strong> When you input text into Neura-Mitram, it is sent to our AI backend for processing. We store anonymous flags to keep your "Orb" synchronized, but we do not require your name, email, or identity.</p>
-            <p><strong>2. Advertising:</strong> We use Google AdSense to fund this free tool. Third-party vendors, including Google, use cookies to serve ads based on your prior visits to this website or other websites.</p>
-            <p><strong>3. Data Security:</strong> All data in transit is encrypted using HTTPS. Anonymous usage data is stored in Google Firebase.</p>
+            <h2>[ PRIVACY DIRECTIVE ]</h2>
+            <p>> DATA IS ENCRYPTED IN TRANSIT.</p>
+            <p>> NO IDENTITY LOGS RETAINED.</p>
+            <p>> ADVERTISING PROTOCOLS: TERMINATED.</p>
         </div>
     </div>
-
     <div id="termsModal" class="modal hidden">
-        <div class="modal-content">
+        <div class="modal-content cyber-modal">
             <span class="close-btn" id="closeTerms">&times;</span>
-            <h2>Terms of Service</h2>
-            <p><strong>Last Updated:</strong> June 2026</p>
-            <p><strong>1. Entertainment Purposes Only:</strong> Neura-Mitram is an AI-powered experimental tool designed for self-reflection and entertainment. <strong>It is NOT a replacement for licensed medical or psychological therapy.</strong> If you are experiencing a mental health crisis, please contact local emergency services immediately.</p>
-            <p><strong>2. AI Limitations:</strong> The insights generated are created by artificial intelligence and may occasionally be inaccurate, harsh, or out of context. You agree not to make major life decisions solely based on the app's output.</p>
-            <p><strong>3. Usage:</strong> You agree not to attempt to reverse-engineer our API or submit illicit, illegal, or harmful content into the engine.</p>
+            <h2>[ SYSTEM TERMS ]</h2>
+            <p>> WARNING: EXPERIMENTAL AI INTERFACE.</p>
+            <p>> NOT FOR MEDICAL/CLINICAL DIAGNOSTICS.</p>
         </div>
     </div>
 
