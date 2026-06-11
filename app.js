@@ -1,6 +1,17 @@
 const BACKEND_API_URL = "https://neuramitram-orb-engine-866055046613.us-central1.run.app/feed-mitram";
 
 // =========================================================================
+// NEURAL SIGNATURE (PERSISTENT MEMORY CORE)
+// =========================================================================
+let neuralSignature = localStorage.getItem("neura_signature");
+if (!neuralSignature) {
+    // Generate a unique anonymous ID (e.g., SUBJECT_4F9A2B)
+    neuralSignature = "SUBJECT_" + Math.random().toString(36).substring(2, 8).toUpperCase();
+    localStorage.setItem("neura_signature", neuralSignature);
+}
+console.log(`> IDENTIFIED: ${neuralSignature}`);
+
+// =========================================================================
 // SENSORY ENGINE (AUDIO)
 // =========================================================================
 let audioCtx = null;
@@ -129,7 +140,8 @@ document.getElementById('feedButton').addEventListener('click', async () => {
         const response = await fetch(BACKEND_API_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ user_id: "anonymous_terminal", user_input: textInput })
+            // Injecting the unique neural signature right here
+            body: JSON.stringify({ user_id: neuralSignature, user_input: textInput })
         });
 
         if (!response.ok) throw new Error(`HTTP_${response.status}`);
