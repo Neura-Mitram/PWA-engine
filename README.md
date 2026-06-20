@@ -1,36 +1,91 @@
-# 🔮 Neura-Mitram PWA-engine
+# PWA-engine
 
-This repository contains the lightning-fast, Progressive Web App (PWA) frontend for **Neura-Mitram** (Your Neural Friend). 
+The frontend of **Neura-Mitram** — a pure HTML/CSS/JS cyberpunk terminal UI.
+No build step, no framework, no bundler. Deployed as a static site
+(Cloudflare Pages) at [neuramitram.space](https://neuramitram.space).
 
-It is designed to be deployed on **Cloudflare Pages** for global edge-caching, ensuring the app loads instantly for users across the US, UK, and India. The UI features a procedurally generated CSS "Mind Orb" that acts as the visual manifestation of the user's subconscious, interacting dynamically with our Google Cloud Run AI backend.
+## Stack
+- Vanilla HTML / CSS / JS (zero dependencies)
+- Web Speech API (voice input)
+- Web Audio API (binaural-beat ambient audio engine)
+- Canvas API (share card generation)
+- PWA manifest (installable on mobile home screen)
 
----
+## File Map
 
-## ⚡ Technical Stack
+| File | Purpose |
+|---|---|
+| `index.html` | All markup — terminal, modals, crisis overlay |
+| `style.css` | Full cyberpunk theme, animations, responsive layout |
+| `app.js` | All logic — API calls, audio engine, sentient loop, history chart, Mirror Mode, Void Session |
+| `manifest.json` | PWA install config |
+| `icons/` | App icons (192px, 512px) — **placeholders included, swap with your real logo** |
 
-* **Architecture:** Progressive Web App (PWA) / Vanilla SPA
-* **Styling:** Pure CSS3 (Zero external libraries to ensure <1 second load times)
-* **Animation:** CSS Keyframes & Radial Gradients (No heavy WebGL or 3D assets)
-* **Monetization API:** Google Publisher Tag (GPT) for Web Rewarded Video Ads
-* **Deployment System:** Cloudflare Pages (Global Edge Network)
+## ⚠️ Required Setup Before Deploy
 
----
+Open `app.js` and change line 9:
 
-## 📂 File Matrix
+```js
+const API_BASE = "https://YOUR-CLOUD-RUN-URL.run.app";
+```
 
-* `index.html` - The structural application shell, typography links, and Google AdSense integrations.
-* `style.css` - Contains the procedural fluid mechanics and keyframes that power the breathing "Mitram Orb", as well as the dark-mode app aesthetic.
-* `app.js` - The client-side logic engine. It handles user inputs, fetches data from the Cloud Run API, dynamically manipulates the CSS orb states, and manages the Google Rewarded Ad verification callbacks.
-* `manifest.json` *(Upcoming)* - Required PWA metadata to allow users to "Install" the website to their mobile home screens.
+Replace with your live `orb-engine-core` Cloud Run service URL. The frontend
+will not work without this.
 
----
+## Local Preview
 
-## 🚀 Deployment & Configuration
+No build step needed. Just serve the folder:
 
-This project is built for zero-configuration deployments via **Cloudflare Pages**.
+```bash
+git clone https://github.com/Neura-Mitram/PWA-engine.git
+cd PWA-engine
+python3 -m http.server 8000
+# open http://localhost:8000
+```
 
-### 1. Link the API
-Before deploying, you must link this frontend to your active AI backend. 
-Open `app.js` and update Line 2 with your live Google Cloud Run URL:
-```javascript
-const BACKEND_API_URL = "[https://your-cloud-run-url-here.run.app/feed-mitram](https://your-cloud-run-url-here.run.app/feed-mitram)";
+Or just open `index.html` directly in a browser (voice input requires
+`https://` or `localhost` due to browser security — file:// won't work for mic).
+
+## Deploy to Cloudflare Pages
+
+1. Push this repo to GitHub.
+2. Cloudflare Dashboard → Workers & Pages → Create → Pages → Connect to Git.
+3. Select the `PWA-engine` repo.
+4. Build settings:
+   - **Build command:** (leave empty)
+   - **Build output directory:** `/`
+5. Deploy. Add your custom domain (`neuramitram.space`) under
+   Custom Domains once deployed.
+
+## Replacing the Icons
+
+The included `icons/icon-192.png` and `icons/icon-512.png` are placeholder
+orb graphics matching the brand. To use your real logo:
+
+1. Export your logo as a square PNG at 192×192 and 512×512.
+2. Replace the files in `icons/` keeping the same filenames.
+3. No other changes needed — `manifest.json` already points to them.
+
+## Features in This Build
+
+- Cyberpunk terminal UI with breathing Quantum Core orb (4 states)
+- Voice input (Web Speech API) + typewriter text rendering
+- Binaural-beat ambient audio mapped to 11 distress types
+- Sentient Loop: daily directive, 24h/48h/7-day decay states with glitch sequences
+- Session streak tracking + pattern escalation detection
+- Urgency intensity bar + recovery signal badges
+- Neural Timeline modal — SVG mood chart + scrollable history list
+- Mirror Mode — AI-generated reflective Q&A flow
+- Void Session — timed free-write with word count
+- Crisis Protocol overlay with guided breathing (triggers at urgency 4–5)
+- Shareable "Aura Card" PNG export (Canvas API)
+- Installable as a PWA on mobile
+
+## Notes
+
+- All state is stored in `localStorage` (`neural_signature`) — anonymous,
+  device-only, no login required.
+- This frontend expects the exact JSON response shape produced by
+  `orb-engine-core`'s `/feed-mitram`, `/wake-mitram`, `/get-history`, and
+  `/mirror-session` endpoints. If you change the backend schema, update the
+  corresponding handlers in `app.js`.

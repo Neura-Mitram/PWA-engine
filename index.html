@@ -1,83 +1,271 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEURA-MITRAM | TERMINAL</title>
-    <link rel="stylesheet" href="style.css?v=5.0">
-    <link rel="manifest" href="manifest.json">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;800&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NEURA-MITRAM | TERMINAL</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0a0a14" />
+  <meta name="description" content="Your AI mirror for emotional clarity. Speak your mind. Mitram listens." />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;800&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css?v=6.0" />
 </head>
 <body>
-    <div class="crt-overlay"></div> 
-    
-    <div class="terminal-container" id="mainTerminal">
-        <header class="cyber-header">
-            <h1 class="logo">NEURA_<span>MITRAM</span><span class="blinking-cursor">_</span></h1>
-            <p class="tagline">YOUR AI MIRROR FOR EMOTIONAL CLARITY</p>
-            <p class="simple-explainer">Welcome. Treat this as your private digital journal. Speak or type whatever is on your mind. The AI will analyze your feelings, reveal your emotional aura, and help you process your stress.</p>
-        </header>
 
-        <div class="orb-nexus">
-            <div class="nexus-wave wave-1"></div>
-            <div class="nexus-wave wave-2"></div>
-            <div class="nexus-wave wave-3"></div>
-            <div id="mitramOrb" class="quantum-core state-gold"></div>
-            <div class="targeting-brackets">
-                <p id="orbVibeText" class="orb-vibe-text">STATUS: BOOTING SEQUENCE...</p>
-            </div>
+<!-- CRT overlay effects -->
+<div class="crt-overlay"></div>
+<div class="scan-lines-bg"></div>
+
+<!-- ═══════════════════════════════════
+     MAIN TERMINAL
+═══════════════════════════════════ -->
+<div class="terminal-container" id="mainTerminal">
+
+  <!-- HEADER -->
+  <header class="cyber-header">
+    <div class="header-top">
+      <h1 class="logo">NEURA_<span class="logo-white">MITRAM</span><span class="blink-cursor">_</span></h1>
+      <div class="header-badges">
+        <div class="streak-badge hidden" id="streakBadge">
+          <span class="streak-icon">◈</span>
+          <span id="streakCount">0</span>&nbsp;DAY STREAK
         </div>
-
-        <div class="data-readout">
-            <div class="scan-line"></div>
-            <p id="directiveText" class="terminal-text directive-readout">> Connecting to your private session...</p>
-            
-            <p id="freeOutputText" class="terminal-text primary-readout hidden"></p>
-            <p id="deepAnalysisText" class="terminal-text secondary-readout hidden"></p>
+        <div class="pattern-badge hidden" id="patternBadge">
+          ⚠ PATTERN DETECTED
         </div>
+      </div>
+    </div>
+    <p class="tagline">YOUR AI MIRROR FOR EMOTIONAL CLARITY</p>
+    <p class="simple-explainer">
+      Treat this as your private digital journal. Speak or type whatever is on your mind.
+      The AI will analyze your feelings, reveal your emotional aura, and help you process your stress.
+    </p>
+  </header>
 
-        <div class="input-matrix">
-            <div class="cyber-mic-wrapper" id="micWrapper">
-                <div class="cyber-ring outer-dash"></div>
-                <div class="cyber-ring inner-track"></div>
-                
-                <button id="micBtn" type="button" title="Initiate Neural Link" class="cyber-core">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 2C10.3431 2 9 3.34315 9 5V11C9 12.6569 10.3431 14 12 14C13.6569 14 15 12.6569 15 11V5C15 3.34315 13.6569 2 12 2Z" fill="currentColor"/>
-                        <path d="M19 10V11C19 14.866 15.866 18 12 18C8.13401 18 5 14.866 5 11V10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M12 18V22M8 22H16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                </button>
-            </div>
+  <!-- ORB NEXUS -->
+  <div class="orb-nexus">
+    <div class="nexus-wave wave-1"></div>
+    <div class="nexus-wave wave-2"></div>
+    <div class="nexus-wave wave-3"></div>
+    <div id="mitramOrb" class="quantum-core state-gold"></div>
+    <div class="targeting-brackets">
+      <p id="orbVibeText" class="orb-vibe-text">STATUS: BOOTING SEQUENCE...</p>
+    </div>
+  </div>
 
-            <textarea id="userInput" class="cyber-input" placeholder="> Type what is on your mind, or tap the mic to speak..."></textarea>
-            <button id="feedButton" class="cyber-btn">ANALYZE MY THOUGHTS</button>
-        </div>
+  <!-- DATA READOUT -->
+  <div class="data-readout">
+    <div class="scan-line"></div>
 
-        <div class="cyber-footer">
-            <p>100% PRIVATE // <span id="openPrivacy" class="legal-link">PRIVACY POLICY</span> // <span id="openTerms" class="legal-link">TERMS OF USE</span></p>
-        </div>
+    <!-- Directive line -->
+    <p id="directiveText" class="terminal-text directive-readout">&gt; Connecting to your private session...</p>
+
+    <!-- Urgency intensity bar -->
+    <div class="urgency-row hidden" id="urgencyRow">
+      <span class="urgency-label">SIGNAL INTENSITY</span>
+      <div class="urgency-bar-track">
+        <div class="urgency-bar-fill" id="urgencyBarFill"></div>
+      </div>
+      <span class="urgency-value" id="urgencyValue">–</span>
     </div>
 
-    <div id="privacyModal" class="modal hidden">
-        <div class="modal-content cyber-modal">
-            <span class="close-btn" id="closePrivacy">&times;</span>
-            <h2>[ PRIVACY DIRECTIVE ]</h2>
-            <p>> DATA IS ENCRYPTED IN TRANSIT.</p>
-            <p>> NO IDENTITY LOGS RETAINED.</p>
-        </div>
-    </div>
-    <div id="termsModal" class="modal hidden">
-        <div class="modal-content cyber-modal">
-            <span class="close-btn" id="closeTerms">&times;</span>
-            <h2>[ SYSTEM TERMS ]</h2>
-            <p>> WARNING: EXPERIMENTAL AI INTERFACE.</p>
-            <p>> NOT FOR MEDICAL/CLINICAL DIAGNOSTICS.</p>
-        </div>
+    <!-- Snappy reaction (free zone) -->
+    <p id="freeOutputText" class="terminal-text primary-readout hidden"></p>
+
+    <!-- Recovery signal badge (positive states) -->
+    <div class="recovery-signal hidden" id="recoverySignal">
+      <span class="recovery-icon">◉</span>
+      <span id="recoveryText">SIGNAL DETECTED</span>
     </div>
 
-    <script src="app.js?v=5.0"></script>
+    <!-- Deep analysis -->
+    <p id="deepAnalysisText" class="terminal-text secondary-readout hidden"></p>
+
+    <!-- Suggested micro-action -->
+    <div class="action-block hidden" id="actionBlock">
+      <span class="action-label">&gt; MICRO-DIRECTIVE</span>
+      <p id="actionText" class="action-text"></p>
+    </div>
+
+    <!-- Share button (appears after analysis) -->
+    <button class="cyber-btn-ghost hidden" id="shareBtn" onclick="generateShareCard()">
+      ◈ SHARE YOUR AURA
+    </button>
+  </div>
+
+  <!-- INPUT MATRIX -->
+  <div class="input-matrix">
+    <!-- Mic button -->
+    <div class="cyber-mic-wrapper">
+      <div class="cyber-ring outer-dash"></div>
+      <div class="cyber-ring inner-track"></div>
+      <button id="micBtn" type="button" title="Initiate Neural Link" class="cyber-core" onclick="startVoiceInput()">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C10.3431 2 9 3.34315 9 5V11C9 12.6569 10.3431 14 12 14C13.6569 14 15 12.6569 15 11V5C15 3.34315 13.6569 2 12 2Z" fill="currentColor"/>
+          <path d="M19 10V11C19 14.866 15.866 18 12 18C8.13401 18 5 14.866 5 11V10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M12 18V22M8 22H16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Text input -->
+    <textarea
+      id="userInput"
+      class="cyber-input"
+      placeholder="> Type what is on your mind, or tap the mic to speak... (Ctrl+Enter to analyze)"
+    ></textarea>
+
+    <!-- Analyze button -->
+    <button id="feedButton" class="cyber-btn" onclick="analyzeThoughts()">
+      ANALYZE MY THOUGHTS
+    </button>
+  </div>
+
+  <!-- SECONDARY ACTION ROW -->
+  <div class="action-row">
+    <button class="cyber-btn-sm" onclick="openHistoryModal()">◈ TIMELINE</button>
+    <button class="cyber-btn-sm" onclick="openMirrorModal()">◈ MIRROR MODE</button>
+    <button class="cyber-btn-sm" onclick="openVoidModal()">◈ VOID SESSION</button>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="cyber-footer">
+    <p>
+      100% PRIVATE
+      &nbsp;//&nbsp;
+      <span class="legal-link" id="openPrivacy">PRIVACY POLICY</span>
+      &nbsp;//&nbsp;
+      <span class="legal-link" id="openTerms">TERMS OF USE</span>
+    </p>
+  </footer>
+
+</div><!-- /terminal-container -->
+
+
+<!-- ═══════════════════════════════════
+     MODALS
+═══════════════════════════════════ -->
+
+<!-- Privacy -->
+<div id="privacyModal" class="modal hidden">
+  <div class="modal-content cyber-modal">
+    <span class="close-btn" id="closePrivacy">&times;</span>
+    <h2>[ PRIVACY DIRECTIVE ]</h2>
+    <p>&gt; DATA IS ENCRYPTED IN TRANSIT.</p>
+    <p>&gt; NO IDENTITY LOGS RETAINED.</p>
+    <p>&gt; YOUR NEURAL SIGNATURE IS ANONYMOUS AND DEVICE-ONLY.</p>
+    <p>&gt; NO DATA IS SOLD OR SHARED WITH THIRD PARTIES.</p>
+  </div>
+</div>
+
+<!-- Terms -->
+<div id="termsModal" class="modal hidden">
+  <div class="modal-content cyber-modal">
+    <span class="close-btn" id="closeTerms">&times;</span>
+    <h2>[ SYSTEM TERMS ]</h2>
+    <p>&gt; WARNING: EXPERIMENTAL AI INTERFACE.</p>
+    <p>&gt; NOT FOR MEDICAL OR CLINICAL DIAGNOSTICS.</p>
+    <p>&gt; NOT A SUBSTITUTE FOR PROFESSIONAL MENTAL HEALTH SUPPORT.</p>
+    <p>&gt; IF YOU ARE IN CRISIS, PLEASE CONTACT A PROFESSIONAL.</p>
+  </div>
+</div>
+
+<!-- Neural Timeline (History) -->
+<div id="historyModal" class="modal hidden">
+  <div class="modal-content cyber-modal modal-wide">
+    <span class="close-btn" id="closeHistory">&times;</span>
+    <h2>[ NEURAL TIMELINE ]</h2>
+    <p class="modal-subtitle">&gt; Your emotional arc, session by session.</p>
+    <div id="historyChart" class="history-chart"></div>
+    <div id="historyList"  class="history-list"></div>
+  </div>
+</div>
+
+<!-- Mirror Mode -->
+<div id="mirrorModal" class="modal hidden">
+  <div class="modal-content cyber-modal">
+    <span class="close-btn" id="closeMirror">&times;</span>
+    <h2>[ MIRROR MODE ]</h2>
+    <p class="modal-subtitle">&gt; Mitram asks. You answer. Mitram then analyzes.</p>
+
+    <!-- Loading state -->
+    <div id="mirrorLoading" class="mirror-loading">
+      <div class="orb-mini state-blue"></div>
+      <p class="mirror-loading-text">GENERATING QUESTIONS...</p>
+    </div>
+
+    <!-- Question flow -->
+    <div id="mirrorQuestions" class="hidden">
+      <p id="mirrorQuestion" class="mirror-question"></p>
+      <textarea id="mirrorInput" class="cyber-input mirror-input" placeholder="> Your answer..."></textarea>
+      <div class="mirror-footer-row">
+        <span class="mirror-progress"><span id="mirrorStep">1</span> / 3</span>
+        <button class="cyber-btn mirror-btn" id="mirrorNextBtn" onclick="mirrorNext()">NEXT &rarr;</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Void Session -->
+<div id="voidModal" class="modal hidden">
+  <div class="modal-content cyber-modal">
+    <span class="close-btn" id="closeVoid">&times;</span>
+    <h2>[ VOID SESSION ]</h2>
+    <p class="modal-subtitle">&gt; Write without stopping. Mitram analyzes at the end.</p>
+
+    <!-- Setup screen -->
+    <div id="voidSetup">
+      <p class="void-label">SELECT DURATION</p>
+      <div class="void-duration-row">
+        <button class="duration-btn active" data-minutes="5"  onclick="selectDuration(this)">5 MIN</button>
+        <button class="duration-btn"        data-minutes="10" onclick="selectDuration(this)">10 MIN</button>
+        <button class="duration-btn"        data-minutes="15" onclick="selectDuration(this)">15 MIN</button>
+      </div>
+      <button class="cyber-btn" onclick="startVoidSession()">ENTER THE VOID</button>
+    </div>
+
+    <!-- Running screen -->
+    <div id="voidRunning" class="hidden">
+      <div class="void-timer-row">
+        <span id="voidTimer"     class="void-timer">05:00</span>
+        <span id="voidWordCount" class="void-wordcount">0 words</span>
+      </div>
+      <textarea id="voidInput" class="cyber-input void-input" placeholder="> Begin. Don't stop writing."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- Crisis Protocol Overlay -->
+<div id="crisisOverlay" class="crisis-overlay hidden">
+  <div class="crisis-content">
+    <div class="crisis-orb"></div>
+    <h2 class="crisis-title">HIGH DISTRESS SIGNAL DETECTED</h2>
+    <p class="crisis-text" id="crisisText"></p>
+
+    <div class="breathing-guide">
+      <div class="breath-circle" id="breathCircle"></div>
+      <p id="breathLabel" class="breath-label">BREATHE IN</p>
+    </div>
+
+    <p class="crisis-note">
+      If you need immediate support:&nbsp;
+      <strong>iCall India — 9152987821</strong>
+    </p>
+    <button class="cyber-btn" onclick="closeCrisisOverlay()">I AM GROUNDED</button>
+  </div>
+</div>
+
+<!-- Hidden canvas for share card generation -->
+<canvas id="shareCanvas" style="display:none;"></canvas>
+
+<script src="app.js?v=6.0"></script>
 </body>
 </html>
