@@ -16,7 +16,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;800&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="style.css?v=6.0" />
+  <link rel="stylesheet" href="style.css?v=9.0" />
+
+  <!-- Razorpay Checkout -->
+  <script src="https://checkout.razorpay.com/v2/checkout.js"></script>
 </head>
 <body>
 
@@ -48,6 +51,9 @@
       Treat this as your private digital journal. Speak or type whatever is on your mind.
       The AI will analyze your feelings, reveal your emotional aura, and help you process your stress.
     </p>
+    <button class="explainer-trigger" id="explainerTrigger" onclick="openExplainerModal()">
+      <span class="explainer-trigger-icon">？</span> WHAT IS THIS &amp; HOW DOES IT HELP ME?
+    </button>
   </header>
 
   <!-- ORB NEXUS -->
@@ -86,12 +92,25 @@
       <span id="recoveryText">SIGNAL DETECTED</span>
     </div>
 
-    <!-- Deep analysis -->
-    <p id="deepAnalysisText" class="terminal-text secondary-readout hidden"></p>
+    <!-- Deep diagnostic — locked behind Mind-Key paywall -->
+    <div id="diagnosticWrapper" class="diagnostic-wrapper hidden">
+      <p id="deepAnalysisText" class="terminal-text secondary-readout locked-text"></p>
 
-    <!-- Suggested micro-action -->
+      <div id="decryptOverlay" class="decrypt-overlay hidden">
+        <button id="decryptBtn" class="decrypt-btn" onclick="initiateDecrypt()">
+          <span class="lock-icon">🔒</span>
+          <span id="decryptBtnLabel">DECRYPT DIAGNOSTIC — ₹49</span>
+        </button>
+      </div>
+
+      <div id="decryptedBadge" class="decrypted-badge hidden">
+        <span class="decrypted-icon">◉</span> DECRYPTED
+      </div>
+    </div>
+
+    <!-- Suggested micro-action (free) -->
     <div class="action-block hidden" id="actionBlock">
-      <span class="action-label">&gt; MICRO-DIRECTIVE</span>
+      <span class="action-label">&gt; MICRO-DIRECTIVE (FREE)</span>
       <p id="actionText" class="action-text"></p>
     </div>
 
@@ -136,6 +155,67 @@
     <button class="cyber-btn-sm" onclick="openVoidModal()">◈ VOID SESSION</button>
   </div>
 
+  <!-- THE REASON IT EXISTS -->
+  <section class="founder-section">
+    <div class="founder-divider">
+      <span class="founder-divider-line"></span>
+      <span class="founder-divider-label">THE REASON IT EXISTS</span>
+      <span class="founder-divider-line"></span>
+    </div>
+
+    <div class="founder-card">
+      <div class="founder-photo-wrap">
+        <img
+          src="assets/founder.jpg"
+          alt="Shiladitya Mallick, creator of Neura-Mitram"
+          class="founder-photo"
+          loading="lazy"
+          width="120" height="120"
+        />
+      </div>
+
+      <div class="founder-info">
+        <p class="founder-built-by">BUILT BY ONE PERSON.</p>
+        <p class="founder-name">Shiladitya Mallick</p>
+        <p class="founder-note">
+          No team. No funding. No investors. Just one person in Kolkata who got
+          tired of journaling apps that only listen and never say anything back.
+          Every line of code, every prompt, every pixel on this screen was built
+          solo — because the problem felt worth solving.
+        </p>
+
+        <div class="founder-socials">
+          <a
+            href="https://www.instagram.com/byshiladityamallick/"
+            target="_blank" rel="noopener noreferrer"
+            class="founder-social-link" aria-label="Instagram — @byshiladityamallick"
+          >
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.6"/>
+              <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6"/>
+              <circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"/>
+            </svg>
+            <span>Instagram</span>
+          </a>
+
+          <a
+            href="https://www.linkedin.com/in/shiladityamallick/"
+            target="_blank" rel="noopener noreferrer"
+            class="founder-social-link" aria-label="LinkedIn — Shiladitya Mallick"
+          >
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" stroke-width="1.6"/>
+              <path d="M7.5 10V17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+              <circle cx="7.5" cy="7" r="1" fill="currentColor"/>
+              <path d="M11 17V13.2C11 11.5 12 10.5 13.4 10.5C14.7 10.5 15.5 11.4 15.5 13.2V17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>LinkedIn</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- FOOTER -->
   <footer class="cyber-footer">
     <p>
@@ -153,6 +233,85 @@
 <!-- ═══════════════════════════════════
      MODALS
 ═══════════════════════════════════ -->
+
+<!-- What Is This / Explainer -->
+<div id="explainerModal" class="modal hidden">
+  <div class="modal-content cyber-modal modal-wide explainer-modal">
+    <span class="close-btn" id="closeExplainer">&times;</span>
+
+    <h2 class="explainer-h2">What is Neura-Mitram?</h2>
+    <p class="explainer-lead">
+      In plain English, no tech jargon: it's a private place to say what's
+      actually on your mind — and get an honest answer back.
+    </p>
+
+    <p class="explainer-body">
+      Think of it like a journal that talks back. You speak or type whatever
+      you're feeling. It figures out what's really going on underneath, tells
+      you the truth about it, and gives you one small thing you can do right
+      now. No judgment, no waiting for a friend to reply.
+    </p>
+
+    <!-- How it works -->
+    <h3 class="explainer-h3">How it works</h3>
+    <div class="explainer-steps">
+      <div class="explainer-step">
+        <span class="step-num">1</span>
+        <p>Tap the mic and talk, or just type — whatever's bothering you, no filter needed.</p>
+      </div>
+      <div class="explainer-step">
+        <span class="step-num">2</span>
+        <p>The AI reads what you said and figures out what you're actually feeling underneath it.</p>
+      </div>
+      <div class="explainer-step">
+        <span class="step-num">3</span>
+        <p>You instantly get an honest reaction, plus one small action you can take right now — both free.</p>
+      </div>
+      <div class="explainer-step">
+        <span class="step-num">4</span>
+        <p>Want the deeper "why"? Unlock the full root-cause breakdown for ₹49 if you want it.</p>
+      </div>
+    </div>
+
+    <!-- Why people use it -->
+    <h3 class="explainer-h3">Why people use it</h3>
+    <ul class="explainer-benefits">
+      <li><span class="benefit-icon">✓</span> Say things you wouldn't say to anyone else — zero judgment</li>
+      <li><span class="benefit-icon">✓</span> Get clarity in seconds instead of overthinking alone for hours</li>
+      <li><span class="benefit-icon">✓</span> See your patterns over time, so repeating stress stops sneaking up on you</li>
+      <li><span class="benefit-icon">✓</span> No sign-up, no email, no password — fully anonymous</li>
+    </ul>
+
+    <!-- Orb color legend -->
+    <h3 class="explainer-h3">What the glowing orb means</h3>
+    <div class="orb-legend">
+      <div class="orb-legend-item">
+        <span class="orb-legend-dot dot-gold"></span>
+        <span><strong>Gold</strong> — you're steady, doing okay</span>
+      </div>
+      <div class="orb-legend-item">
+        <span class="orb-legend-dot dot-blue"></span>
+        <span><strong>Blue</strong> — calm, reflective state</span>
+      </div>
+      <div class="orb-legend-item">
+        <span class="orb-legend-dot dot-crimson"></span>
+        <span><strong>Crimson</strong> — high stress, worth pausing for</span>
+      </div>
+      <div class="orb-legend-item">
+        <span class="orb-legend-dot dot-grey"></span>
+        <span><strong>Grey</strong> — feeling numb or disconnected</span>
+      </div>
+    </div>
+
+    <!-- Privacy reassurance -->
+    <div class="explainer-privacy-note">
+      <strong>Your privacy:</strong> no login, no name, no identity logs.
+      Just a random anonymous code saved only on your own device.
+    </div>
+
+    <button class="cyber-btn explainer-cta" onclick="closeExplainerModal()">GOT IT — LET'S START</button>
+  </div>
+</div>
 
 <!-- Privacy -->
 <div id="privacyModal" class="modal hidden">
@@ -266,6 +425,6 @@
 <!-- Hidden canvas for share card generation -->
 <canvas id="shareCanvas" style="display:none;"></canvas>
 
-<script src="app.js?v=6.0"></script>
+<script src="app.js?v=9.0"></script>
 </body>
 </html>

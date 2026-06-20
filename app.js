@@ -1,12 +1,13 @@
 /* ═══════════════════════════════════════════════════
-   NEURA-MITRAM · app.js v6.0
+   NEURA-MITRAM · app.js v7.0
    Full sentient loop · audio engine · history · mirror · void
+   · Phase 5: Mind-Key Economy (Razorpay decrypt paywall)
 ═══════════════════════════════════════════════════ */
 
 // ─────────────────────────────────────────────
 //  ⚙ CONFIG — UPDATE THIS TO YOUR CLOUD RUN URL
 // ─────────────────────────────────────────────
-const API_BASE = "https://neuramitram-orb-engine-866055046613.us-central1.run.app";
+const API_BASE = "https://YOUR-CLOUD-RUN-URL.run.app";
 // ─────────────────────────────────────────────
 
 // ─── Global state ──────────────────────────────
@@ -27,6 +28,11 @@ let mirrorStep      = 0;
 let voidDuration    = 5;
 let voidInterval    = null;
 let voidSecondsLeft = 0;
+
+// Phase 5 — Mind-Key Economy
+let currentReadingId   = null;
+let currentPriceRupees = 49;
+let isDecrypting       = false;
 
 // ─── Loading messages ───────────────────────────
 const LOADING_MESSAGES = [
@@ -65,6 +71,8 @@ window.addEventListener("DOMContentLoaded", () => {
 
 function initSession() {
   let sig = localStorage.getItem("neural_signature");
+  const isFirstVisit = !sig;
+
   if (!sig) {
     sig = "NS-" + Date.now() + "-" +
       Math.random().toString(36).substring(2, 10).toUpperCase();
@@ -72,9 +80,17 @@ function initSession() {
   }
   neuralSignature = sig;
   wakeUp();
+
+  // First-time visitors get the plain-English explainer automatically
+  if (isFirstVisit) {
+    setTimeout(() => openExplainerModal(), 700);
+  }
 }
 
 function setupListeners() {
+  // Explainer modal
+  document.getElementById("closeExplainer").onclick = () => closeExplainerModal();
+
   // Footer legal links
   document.getElementById("openPrivacy").onclick  = () => showModal("privacyModal");
   document.getElementById("openTerms").onclick    = () => showModal("termsModal");
@@ -98,6 +114,9 @@ function setupListeners() {
 // ─── Modal helpers ──────────────────────────────
 function showModal(id) { document.getElementById(id).classList.remove("hidden"); }
 function hideModal(id) { document.getElementById(id).classList.add("hidden"); }
+
+function openExplainerModal()  { showModal("explainerModal"); }
+function closeExplainerModal() { hideModal("explainerModal"); }
 
 // ─── Wake Up ────────────────────────────────────
 async function wakeUp() {
@@ -203,9 +222,15 @@ function handleAnalysisResponse(data) {
   hideLoadingState();
 
   const {
-    orb_color, snappy_reaction, deep_analysis, suggested_action,
+    orb_color, snappy_reaction, suggested_action,
     distress_flag, recovery_signal, urgency_level, health_impact,
+    reading_id, deep_analysis_locked, deep_analysis_preview, deep_analysis,
+    price_rupees,
   } = data;
+
+  // ── Track this reading for the decrypt flow ──
+  currentReadingId   = reading_id || null;
+  currentPriceRupees = price_rupees || 49;
 
   // ── Orb ──
   setOrbState(orb_color);
@@ -215,7 +240,7 @@ function handleAnalysisResponse(data) {
   // ── Urgency bar ──
   showUrgencyBar(urgency_level || 1);
 
-  // ── Snappy reaction (typed in) ──
+  // ── Snappy reaction (typed in, always free) ──
   const reactionEl = document.getElementById("freeOutputText");
   reactionEl.classList.remove("hidden");
   reactionEl.textContent = "";
@@ -230,26 +255,23 @@ function handleAnalysisResponse(data) {
     document.getElementById("recoverySignal").classList.add("hidden");
   }
 
-  // ── Deep analysis (delayed) ──
-  const analysisEl = document.getElementById("deepAnalysisText");
+  // ── Deep diagnostic (locked or open) ──
   setTimeout(() => {
-    analysisEl.classList.remove("hidden");
-    analysisEl.textContent = "";
-    typewriter(analysisEl, `>> DIAGNOSTIC: ${deep_analysis}`, 14);
+    renderDiagnostic({ deep_analysis_locked, deep_analysis_preview, deep_analysis });
   }, 1400);
 
-  // ── Suggested action ──
+  // ── Suggested action (always free) ──
   if (suggested_action) {
     setTimeout(() => {
       document.getElementById("actionText").textContent = suggested_action;
       document.getElementById("actionBlock").classList.remove("hidden");
-    }, 2800);
+    }, 2400);
   }
 
   // ── Share button ──
   setTimeout(() => {
     document.getElementById("shareBtn").classList.remove("hidden");
-  }, 3400);
+  }, 3000);
 
   // ── Audio ──
   playMoodAudio(distress_flag, health_impact);
@@ -258,6 +280,171 @@ function handleAnalysisResponse(data) {
   if (urgency_level >= 4) {
     setTimeout(() => triggerCrisisProtocol(urgency_level, distress_flag), 4500);
   }
+}
+
+// ─── Phase 5: Render the diagnostic, locked or unlocked ──
+function renderDiagnostic({ deep_analysis_locked, deep_analysis_preview, deep_analysis }) {
+  const wrapper    = document.getElementById("diagnosticWrapper");
+  const textEl     = document.getElementById("deepAnalysisText");
+  const overlay    = document.getElementById("decryptOverlay");
+  const badge      = document.getElementById("decryptedBadge");
+  const decryptBtn = document.getElementById("decryptBtnLabel");
+
+  wrapper.classList.remove("hidden");
+  badge.classList.add("hidden");
+  textEl.classList.remove("decrypted");
+
+  if (deep_analysis_locked) {
+    textEl.textContent = `>> DIAGNOSTIC: ${deep_analysis_preview}`;
+    decryptBtn.textContent = `DECRYPT DIAGNOSTIC — ₹${currentPriceRupees}`;
+    overlay.classList.remove("hidden");
+    document.getElementById("decryptBtn").disabled = false;
+  } else {
+    // No DB / fail-open path — show it straight, no paywall
+    overlay.classList.add("hidden");
+    textEl.textContent = "";
+    typewriter(textEl, `>> DIAGNOSTIC: ${deep_analysis}`, 14);
+  }
+}
+
+// ─── Phase 5: Decrypt flow ───────────────────────
+async function initiateDecrypt() {
+  if (isDecrypting || !currentReadingId) return;
+  isDecrypting = true;
+
+  const btn = document.getElementById("decryptBtn");
+  const label = document.getElementById("decryptBtnLabel");
+  const originalLabel = label.textContent;
+  btn.disabled = true;
+  label.textContent = "OPENING SECURE CHANNEL...";
+
+  try {
+    const orderRes = await fetch(`${API_BASE}/create-order`, {
+      method:  "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        user_id:    neuralSignature,
+        reading_id: currentReadingId,
+      }),
+    });
+
+    if (!orderRes.ok) {
+      const err = await orderRes.json().catch(() => ({}));
+      throw new Error(err.detail || `Order creation failed (${orderRes.status})`);
+    }
+
+    const order = await orderRes.json();
+
+    const options = {
+      key:         order.key_id,
+      amount:      order.amount,
+      currency:    order.currency,
+      order_id:    order.order_id,
+      name:        "Neura-Mitram",
+      description: "Decrypt Psychological Diagnostic",
+      theme:       { color: "#00c8ff" },
+      handler: async function (response) {
+        await handleDecryptSuccess(response);
+      },
+      modal: {
+        ondismiss: function () {
+          isDecrypting = false;
+          btn.disabled = false;
+          label.textContent = originalLabel;
+        },
+      },
+    };
+
+    const rzp = new Razorpay(options);
+    rzp.on("payment.failed", function () {
+      isDecrypting = false;
+      btn.disabled = false;
+      label.textContent = "PAYMENT FAILED — TRY AGAIN";
+      setTimeout(() => { label.textContent = originalLabel; }, 2500);
+    });
+
+    rzp.open();
+    // Reset button immediately — Razorpay's own modal takes over the wait state
+    btn.disabled = false;
+    label.textContent = originalLabel;
+    isDecrypting = false;
+
+  } catch (err) {
+    console.error("Decrypt order error:", err);
+    label.textContent = "CONNECTION FAILED — TRY AGAIN";
+    btn.disabled = false;
+    isDecrypting = false;
+    setTimeout(() => { label.textContent = originalLabel; }, 2500);
+  }
+}
+
+async function handleDecryptSuccess(razorpayResponse) {
+  const textEl     = document.getElementById("deepAnalysisText");
+  const overlay    = document.getElementById("decryptOverlay");
+  const wrapper    = document.getElementById("diagnosticWrapper");
+  const badge      = document.getElementById("decryptedBadge");
+  const label      = document.getElementById("decryptBtnLabel");
+
+  label.textContent = "VERIFYING PAYMENT...";
+
+  try {
+    const res = await fetch(`${API_BASE}/verify-payment`, {
+      method:  "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        user_id:             neuralSignature,
+        reading_id:          currentReadingId,
+        razorpay_order_id:   razorpayResponse.razorpay_order_id,
+        razorpay_payment_id: razorpayResponse.razorpay_payment_id,
+        razorpay_signature:  razorpayResponse.razorpay_signature,
+      }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || "Verification failed");
+    }
+
+    const data = await res.json();
+
+    // ── Reveal ──
+    overlay.classList.add("hidden");
+    textEl.classList.add("decrypted");
+    textEl.textContent = "";
+    typewriter(textEl, `>> DIAGNOSTIC: ${data.deep_analysis}`, 12);
+
+    badge.classList.remove("hidden");
+    wrapper.classList.add("reveal-flash");
+    setTimeout(() => wrapper.classList.remove("reveal-flash"), 950);
+
+    playDecryptSuccessSound();
+
+  } catch (err) {
+    console.error("Verify payment error:", err);
+    label.textContent = "VERIFICATION FAILED — CONTACT SUPPORT IF CHARGED";
+    document.getElementById("decryptBtn").disabled = false;
+  }
+}
+
+function playDecryptSuccessSound() {
+  const ctx = getAudioCtx();
+  const now = ctx.currentTime;
+  // Quick ascending 3-note arpeggio — C5, E5, G5
+  const notes = [523.25, 659.25, 783.99];
+  notes.forEach((freq, i) => {
+    const osc  = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.value = freq;
+    const start = now + i * 0.09;
+    gain.gain.setValueAtTime(0, start);
+    gain.gain.linearRampToValueAtTime(0.10, start + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.001, start + 0.35);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(start);
+    osc.stop(start + 0.4);
+  });
 }
 
 // ─── Orb State ──────────────────────────────────
@@ -296,7 +483,7 @@ function showLoadingState() {
   const el = document.getElementById("directiveText");
 
   // Hide all output zones
-  ["freeOutputText","deepAnalysisText","actionBlock","shareBtn",
+  ["freeOutputText","diagnosticWrapper","actionBlock","shareBtn",
    "urgencyRow","recoverySignal"].forEach(id => {
     document.getElementById(id).classList.add("hidden");
   });
@@ -721,9 +908,12 @@ function generateShareCard() {
   ctx.font      = "15px 'Courier New', monospace";
   const afterSnappy = wrapCanvasText(ctx, snappy, 220, 120, 520, 24);
 
-  // Deep analysis
-  const analysis = document.getElementById("deepAnalysisText").textContent
-    .replace(/^>>?\s*(DIAGNOSTIC:?\s*)?/i, "").trim();
+  // Deep analysis — only include real text if decrypted, otherwise a teaser line
+  const diagnosticEl = document.getElementById("deepAnalysisText");
+  const isUnlocked    = diagnosticEl.classList.contains("decrypted");
+  const analysis = isUnlocked
+    ? diagnosticEl.textContent.replace(/^>>?\s*(DIAGNOSTIC:?\s*)?/i, "").trim()
+    : "🔒 Deep diagnostic locked — decrypt yours at neuramitram.space";
   ctx.fillStyle = "rgba(192,216,232,0.65)";
   ctx.font      = "12px 'Courier New', monospace";
   wrapCanvasText(ctx, analysis, 220, afterSnappy + 14, 520, 20);
